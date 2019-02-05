@@ -4,19 +4,10 @@ const chai = require("chai");
 const expect = chai.expect;
 const should = chai.should();
 const request = require("supertest");
-const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
 const server = require("../server");
 const baseUrl = "http://localhost:3000";
-const salt = crypto.randomBytes(16).toString("base64");
-
-const decrypt = encryptedTxt => {
-  const decipher = crypto.createDecipher("aes-256-ctr", salt);
-  let decrypted = decipher.update(encryptedTxt, "hex", "utf8");
-  decrypted += decipher.final("utf8");
-  return decrypted;
-};
 
 describe("server", () => {
   before(() => {
@@ -41,7 +32,7 @@ describe("server", () => {
   it("POST request to /messsage with message data returns message id", done => {
     request(baseUrl)
       .post("/message")
-      .send({ message: "This is a test message." })
+      .send({ message: "This is a test message.FIX" })
       .expect(200)
       .expect("Content-Type", "application/json; charset=utf-8")
       .end((error, response) => {
@@ -104,13 +95,8 @@ describe("server", () => {
           id: 1,
           message: "This is a test message."
         });
-        bcrypt.compare(plainText, hash).then(result => {
-          result.should.be.true;
-        });
-        // let result = JSON.parse(decrypt(response.text));
-        // result.should.be.a('object');
-        // result.should.eql({id: 1, message: "This is a test message."});
-        done();
+        let result = bcrypt.compareSync(plainText, hash);
+        result.should.be.true;
       });
   });
 
@@ -128,13 +114,8 @@ describe("server", () => {
         const plainText = JSON.stringify([
           { id: 1, message: "This is a test message." }
         ]);
-        bcrypt.compare(plainText, hash).then(result => {
-          result.should.be.true;
-        });
-        // let result = JSON.parse(decrypt(response.text));
-        // result.should.be.a("Array");
-        // result.should.eql([{ id: 1, message: "This is a test message." }]);
-        done();
+        let result = bcrypt.compareSync(plainText, hash);
+        result.should.be.true;
       });
   });
 
