@@ -97,6 +97,7 @@ describe("server", () => {
         });
         let result = bcrypt.compareSync(plainText, hash);
         result.should.be.true;
+        done();
       });
   });
 
@@ -116,6 +117,7 @@ describe("server", () => {
         ]);
         let result = bcrypt.compareSync(plainText, hash);
         result.should.be.true;
+        done();
       });
   });
 
