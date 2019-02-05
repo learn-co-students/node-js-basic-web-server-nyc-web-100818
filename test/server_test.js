@@ -32,7 +32,7 @@ describe("server", () => {
   it("POST request to /messsage with message data returns message id", done => {
     request(baseUrl)
       .post("/message")
-      .send({ message: "This is a test message.FIX" })
+      .send({ message: "This is a test message." })
       .expect(200)
       .expect("Content-Type", "application/json; charset=utf-8")
       .end((error, response) => {
